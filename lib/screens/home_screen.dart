@@ -30,41 +30,57 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   List<Widget> status = [
-
-
     Container(
-      width: 100,
+      width: 160,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Done'),
+          SizedBox(
+            width: 30,
+          ),
+          Text(
+            'Done',
+            style: TextStyle(color: Colors.white70),
+          ),
+          SizedBox(
+            width: 12,
+          ),
           DoneIcon(onPressed: () {}),
-
         ],
       ),
     ),
-
-
     Container(
-      width: 140,
+      width: 160,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Pending'),
+          SizedBox(
+            width: 13,
+          ),
+          Text(
+            'Pending',
+            style: TextStyle(color: Colors.white70),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           PendingIcon(),
-          SizedBox(width: 20,)
         ],
       ),
     ),
-
     Container(
-      width: 140,
+      width: 160,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Taken off'),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            'Taken off',
+            style: TextStyle(color: Colors.white70),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           NotDoneIcon(),
-          SizedBox(width: 20,)
         ],
       ),
     ),
@@ -77,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    StarMenuController centerStarMenuController = StarMenuController();
+    StarMenuController statusIconController = StarMenuController();
 
     final screenHeight = MediaQuery.of(context).size.height;
     // final screenWidht = MediaQuery.of(context).size.width;
@@ -143,14 +159,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: Text(habits_list[cardIndex][0].habit_name),
                           subtitle:
                               Text(habits_list[cardIndex][0].habit_description),
-                          trailing: (habits_list[cardIndex][0].status_icon == 1)
-                              ? DoneIcon(
-                                  onPressed: () =>
-                                      centerStarMenuController.openMenu!(),
-                                )
-                              : (habits_list[cardIndex][0].status_icon == 2)
-                                  ? PendingIcon()
-                                  : NotDoneIcon(),
+                          trailing: StarMenu(
+                            controller: statusIconController,
+                            onItemTapped: (index, statusIconController) {
+                              setState(() {
+                                if (index == 1) {
+                                } else if (index == 2) {}
+                              });
+                            },
+                            params: StarMenuParameters(
+                              backgroundParams: BackgroundParams(
+                                  sigmaX: 3,
+                                  sigmaY: 3,
+                                  backgroundColor: Colors.black54),
+                              shape: MenuShape.linear,
+                              linearShapeParams: LinearShapeParams(
+                                  angle: 90,
+                                  alignment: LinearAlignment.left,
+                                  space: 15),
+                              centerOffset: Offset(10, -70),
+                              openDurationMs: 150,
+                            ),
+                            items: status,
+                            parentContext: statusKey.currentContext,
+                            child: (habits_list[cardIndex][0].status_icon == 1)
+                                ? DoneIcon(onPressed: () {})
+                                : (habits_list[cardIndex][0].status_icon == 2)
+                                    ? PendingIcon()
+                                    : NotDoneIcon(),
+                          ),
                           children: <Widget>[
                             Container(
                               child: Padding(
@@ -194,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: EdgeInsets.all(4),
                     );
                   },
-                  itemBuilder: (BuildContext context, int Index) {
+                  itemBuilder: (BuildContext context, int cardIndex2) {
                     return Padding(
                       padding: EdgeInsets.fromLTRB(8, 0, 8, 10),
                       child: Container(
@@ -204,8 +241,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             border: Border.all(color: Colors.black12)),
                         child: ExpansionTile(
                           textColor: Colors.black,
-                          iconColor: habits_list[Index][0].get_color(),
-                          collapsedIconColor: habits_list[Index][0].get_color(),
+                          iconColor: habits_list[cardIndex2][0].get_color(),
+                          collapsedIconColor:
+                              habits_list[cardIndex2][0].get_color(),
                           shape: RoundedRectangleBorder(
                               side: BorderSide(width: 2, color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
@@ -213,38 +251,37 @@ class _HomeScreenState extends State<HomeScreen> {
                             margin: EdgeInsets.only(left: 8),
                             height: double.infinity,
                             child: Icon(
-                              habits_list[Index][0].habit_icon,
+                              habits_list[cardIndex2][0].habit_icon,
                               size: 28,
                             ),
                           ),
-                          title: Text(habits_list[Index][0].habit_name),
-                          subtitle:
-                              Text(habits_list[Index][0].habit_description),
-                          trailing: (habits_list[Index][0].status_icon == 1)
-                              ? StarMenu(
-                                  params: StarMenuParameters(
-                                    backgroundParams: BackgroundParams(
-                                        sigmaX: 3,
-                                        sigmaY: 3,
-                                        backgroundColor: Colors.black54),
-                                    shape: MenuShape.linear,
-                                    linearShapeParams: LinearShapeParams(
-                                      angle: 90,
-                                      alignment: LinearAlignment.left,
-                                      space: 15
-                                    ),
-                                    centerOffset: Offset(0, -70),
-                                    openDurationMs: 150,
-                                  ),
-                                  items: status,
-                                  child: DoneIcon(
-                                    onPressed: () {},
-                                  ),
-                                )
-                              : (habits_list[Index][0].status_icon == 2)
+                          title: Text(habits_list[cardIndex2][0].habit_name),
+                          subtitle: Text(
+                              habits_list[cardIndex2][0].habit_description),
+                          trailing: (habits_list[cardIndex2][0].status_icon ==
+                                  1)
+                              ? DoneIcon(onPressed: () {})
+                              : (habits_list[cardIndex2][0].status_icon == 2)
                                   ? PendingIcon()
                                   : NotDoneIcon(),
-                          children: <Widget>[],
+                          children: <Widget>[
+                            Container(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: WeeklyDatePicker(
+                                  doneDays: completedDays,
+                                  notDoneDays: notDoneDays,
+                                  selectedDay: _selectedDay,
+                                  changeDay: (value) => (value) => setState(() {
+                                        _selectedDay = value;
+                                      }),
+                                  selectedBackgroundColor: Colors.green,
+                                  enableWeeknumberText: false,
+                                  digitsColor: Colors.black,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     );
